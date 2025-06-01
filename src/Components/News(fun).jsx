@@ -69,7 +69,7 @@ useEffect(() => {
 
         
          <div className="row">
-        {!loading && articles.map((element) => (
+       {!loading && Array.isArray(articles) && articles.map((element) =>  (
           <div className="col-md-4" key={element.url}>
             <NewsItem
               title={element.title ? element.title.slice(0, 45) : ""}
