@@ -37,10 +37,10 @@ useEffect(() => {
     let parsedData = await data.json();
     props.setProgress(70);
 
-    setArticles(parsedData.articles);
-    setTotalResults(parsedData.totalResults);
-    setLoading(false);
-    props.setProgress(100);
+     setArticles(Array.isArray(parsedData.articles) ? parsedData.articles : []);
+  setTotalResults(parsedData.totalResults || 0);
+  setLoading(false);
+  props.setProgress(100);
   };
 
   // Handle Previous Page Button
