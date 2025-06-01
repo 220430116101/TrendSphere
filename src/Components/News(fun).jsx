@@ -25,6 +25,8 @@ useEffect(() => {
   }, [page]);
 
   // fetchData function replaces componentDidMount logic
+
+  /*
   const fetchData = async () => {
     console.log("Fetching data...");
     props.setProgress(15); // replaces `this.props.setProgress`
@@ -42,7 +44,42 @@ useEffect(() => {
   setLoading(false);
   props.setProgress(100);
   };
+*/
 
+const fetchData = async () => {
+  try {
+    props.setProgress(15);
+    setLoading(true);
+
+    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=9871f501a79148e1b853385d644b7f57&page=${page}&pageSize=${props.pageSize}`;
+    let data = await fetch(url);
+    props.setProgress(30);
+
+    if (!data.ok) {
+      // If the response is not ok, set articles to empty and stop loading
+      setArticles([]);
+      setTotalResults(0);
+      setLoading(false);
+      props.setProgress(100);
+      return;
+    }
+
+    let parsedData = await data.json();
+    props.setProgress(70);
+
+    setArticles(Array.isArray(parsedData.articles) ? parsedData.articles : []);
+    setTotalResults(parsedData.totalResults || 0);
+    setLoading(false);
+    props.setProgress(100);
+  } catch (error) {
+    setArticles([]);
+    setTotalResults(0);
+    setLoading(false);
+    props.setProgress(100);
+    // Optionally, show an error message to the user
+    console.error("Failed to fetch news:", error);
+  }
+};
   // Handle Previous Page Button
   const handlePrevious = async () => {
     setPage(page - 1);
